@@ -32,7 +32,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12"> <br>
-                <h3>อาหาร    <a href="addfood_dropdown.php" class="btn btn-info float-end">+เพิ่มข้อมูล</a> </h3> <br/>
+                <h3>รายการข้อมูลอาหารสัตว์ <a href="addfood_dropdown.php" class="btn btn-info float-end">+เพิ่มข้อมูล</a> </h3> <br/>
                 <table id="animalfoodTable" class="display-table table-dark table-striped table-responsive table-bordered table table-hover vw-50 vh-50">
                     <thead align="center">
                         <tr>
@@ -81,7 +81,7 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
     <script>
         $(document).ready(function() {
-            $('#animalFoodTable').DataTable();
+            $('#animalfoodTable').DataTable();
         });
     </script>
     

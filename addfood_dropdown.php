@@ -1,12 +1,3 @@
-<?php
-require 'connect.php';
-$sql_i = "select * from Type";
-$stmt_s = $conn->prepare ($sql_i);
-$stmt_s->execute();
-?>
-
-<!DOCTYPE html>
-<html lang="en">
 <!--<!DOCTYPE html>-->
 <html lang="en">
 
@@ -15,73 +6,61 @@ $stmt_s->execute();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-    <title>Update food </title>
-  </head>
+    <!-- <link rel="stylesheet" href="blackground.css">
+    <link rel="stylesheet" href="form.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,
+          wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet"> -->
+    <title>User Registration 265</title>
+    <style type="text/css">
+        img {
+            transition: transform 0.25s ease;
+        }
+
+        img:hover {
+            -webkit-transform: scale(1.5);
+
+            transform: scale(1.5);
+        }
+    </style>
+
+
+</head>
 
 <body>
-<div class="container justify-content-center align-center-item">
-      <div class="row">
-        <div class="col-md-4"> <br>
-        <div class="form-group">
-    <h1>Add Food</h1>
+    <?php
+    require 'connect.php';
+
     
-   <form action="addfood_dropdown.php" method="POST" enctype="multipart/form-data">
-   <input type="text" placeholder="รหัสอาหารสัตว์" class="d-grid gap-6 form-control " name="FoodID" a-describedby="FoodID">
-        <br><br/>
-        <input type="text" placeholder="ชื่ออาหารสัตว์" class="d-grid gap-6 form-control " name="FoodName" a-describedby="FoodName">
-         <br><br/>
-         <input type="number" placeholder="ราคา" class="d-grid gap-6 form-control " name="Foodprice" a-describedby="Foodprice">
-         <br><br/>
-         <input type="file" name="Picture" class="form-control" required> 
-         <br><br/>
-         <label> ประเภทอาหาร </label>
-         <select name="TypeID">
-         <?php 
-         while ($cc = $stmt_s->fetch(PDO::FETCH_ASSOC)) :
-         ?>
-         <option value="<?php echo $cc['TypeID']  ?>">
-            <?php echo $cc['TypeName'] ?>
-         </option>
-            <?php
-            endwhile
-            ?>
+    $sql_select = 'SELECT * FROM type ORDER BY TypeID';
+    $stmt_s = $conn->prepare($sql_select);
+    $stmt_s->execute();
 
-         </select> 
-         <br><br/>
-         <input type="submit">
-         
+    if (isset($_POST['submit'])) {
+        if (!empty($_POST['FoodName'])) {
+            $uploadFile = $_FILES['image']['name'];
+            $tmpFile = $_FILES['image']['tmp_name'];
+             //echo " upload file = " . $uploadFile;
+             //echo " tmp file = " . $tmpFile;
 
 
-    </form>
+            $sql = "insert into animalfood(FoodID,FoodName,Foodprice,image,TypeID)
+							values (:FoodID, :FoodName, :Foodprice, :image, :TypeID)";
 
-</body>
-</html>
-
-
-<?php
-try{
-if (isset($_POST['FoodID']) && isset($_POST['FoodName'])):
-echo $_GET['a'];
-    $uploadFile = $_FILES['image']['name'];
-    $tmpFile = $_FILES['image']['tmp_name'];
-
-require 'connect.php';
-$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$sql = "insert into animalfood values(:FoodID, :FoodName, :Foodprice, :TypeID, :image)";
-$stmt = $conn->prepare($sql);
-$stmt->bindParam(':FoodID', $_POST['FoodID']);
-$stmt->bindParam(':FoodName', $_POST['FoodName']);
-$stmt->bindParam(':Foodprice', $_POST['Foodprice']);
-$stmt->bindParam(':image',$uploadFile);
-$stmt->bindParam(':TypeID', $_POST['TypeID']);
-
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':FoodID', $_POST['FoodID']);
+            $stmt->bindParam(':FoodName', $_POST['FoodName']);
+            $stmt->bindParam(':Foodprice', $_POST['Foodprice']);
+            $stmt->bindParam(':image', $uploadFile);
+            $stmt->bindParam(':TypeID', $_POST['TypeID']);
            
 
 
+
+
             $fullpath = "./Picture/" . $uploadFile;
-            echo " fullpath = " . $fullpath;
             move_uploaded_file($tmpFile, $fullpath);
-            
+
             echo '
                 <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>
@@ -89,17 +68,16 @@ $stmt->bindParam(':TypeID', $_POST['TypeID']);
 
             try {
                 if ($stmt->execute()) :
-                    $message = 'Successfully add new Food';
                     echo '
                         <script type="text/javascript">        
                         $(document).ready(function(){
                     
                             swal({
                                 title: "Success!",
-                                text: "Successfuly add Food",
+                                text: "Successfuly ADD FOOD",
                                 type: "success",
-                                timer: 2500,
-                                showConfirmButton: false
+                                timer: 250000,
+                                showConfirmButton: "ok"
                             }, function(){
                                     window.location.href = "index.php";
                             });
@@ -107,28 +85,84 @@ $stmt->bindParam(':TypeID', $_POST['TypeID']);
                         </script>
                     ';
                 else :
-                    $message = 'Fail to add new Food';
+
+                    echo '<script type="text/javascript">
+            $(document).ready(function(){
+              Swal({
+                title: "ไม่สำเร็จ",
+                text: "ไม่สามารถลบได้",
+                icon: "warning",
+                confirmButtonText: "ok",
+              }).then(function(){
+                window.location.href = "index.php";
+              });
+            });
+          </script>';
+
+
                 endif;
                 // echo $message;
             } catch (PDOException $e) {
-                 echo 'Fail! ' . $e;
+                echo 'Fail! ' . $e;
             }
             $conn = null;
-        
+        }
+    }
     ?>
-    <?php
-if ($stmt->execute()): 
-    $message ='Suscessfully add new Food';
-else :
 
-    $message = 'Fail to add new Food';
-endif;
-echo $message;
 
-$conn = null;
-    endif;
-}
- catch (PDOException $e) {
-    echo $e->getMessage();
-}
-?>
+
+
+    <div class="container justify-content-center align-center-item">
+        <div class="row">
+            <div class="col-md-4"> <br>
+                <div class="row g-3">
+                    <div class="form-group">
+                        <h3>เพิ่มอาหาร</h3>
+                        <form action="addfood_dropdown.php" method="POST" enctype="multipart/form-data">
+                        <input type="number" class="form-control" placeholder="FoodID" name="FoodID" required>
+                            <br> <br>
+                            <input type="text" class="form-control" placeholder="FoodName" name="FoodName" required>
+                            <br> <br>
+                            <input type="number" class="form-control" placeholder="Foodprice" name="Foodprice">
+                            <br> <br>
+                            <label>ประเภท</label>
+                            <select name="TypeID" class="form-control">
+                                <?php
+                                while ($t = $stmt_s->fetch(PDO::FETCH_ASSOC)) :
+                                ?>
+                                    <option value="<?php echo $t['TypeID'] ?>">
+                                        <?php echo $t['TypeName'] ?>
+                                    </option>
+
+                                <?php
+
+                                endwhile;
+                                ?>
+                                
+                            </select>
+                           
+                            <br> <br>
+                            แนบรูปภาพ:
+                            <input type="file" name="image" class="form-control" required>
+                            <br><br>
+                            <input type="submit" value="Submit" name="submit" class="btn btn-success" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#animalfoodTable').DataTable();
+        });
+    </script>
+
+
+
+</body>
+
+</html>

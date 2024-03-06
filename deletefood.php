@@ -49,7 +49,7 @@ echo '
 
             try {
                 if ($stmt->execute()) :
-                    $message = 'Successfully add new Food';
+                    $message = 'Successfully Delete Food';
                     echo '
                         <script type="text/javascript">        
                         $(document).ready(function(){
@@ -59,7 +59,7 @@ echo '
                                 text: "Successfuly Delete Food",
                                 type: "success",
                                 timer: 2500,
-                                showConfirmButton: false
+                                showConfirmButton: "ok"
                             }, function(){
                                     window.location.href = "index.php";
                             });
